@@ -37,7 +37,7 @@ def write_data(sheet: xlwt.Worksheet, elements: list):
     rank = int(elements[0].string)
     sheet.write(rank, 0, label=rank)
     sheet.write(rank, 1, label=elements[1].string)
-    sheet.write(rank, 2, label=int(elements[2].string))
+    sheet.write(rank, 2, label=elements[2].string)
     sheet.write(rank, 3, label=float(elements[3].string))
 
 
