@@ -1,0 +1,5 @@
+__pycache__
+.vscode
+*.html
+*.xls
+get.py
