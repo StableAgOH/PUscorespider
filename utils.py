@@ -1,14 +1,14 @@
 '''工具函数'''
+import os
 import re
+import time
 import requests
 import bs4
-import xlwt
+import tqdm
+
+from counter import cter
+import book
 import constants as ct
-
-
-def get_rq(url: str):
-    '''从url获取一个get的requests'''
-    return requests.get(url, headers=ct.headers)
 
 
 def init_bs(url: str):
@@ -16,32 +16,14 @@ def init_bs(url: str):
     return bs4.BeautifulSoup(get_rq(url).content, "lxml")
 
 
+def get_rq(url: str):
+    '''从url获取一个get的requests'''
+    return requests.get(url, headers=ct.headers)
+
+
 def get_num(string: bs4.NavigableString):
     '''使用正则表达式获得一个NavigableString中的数字'''
-    return int(re.sub(r"\D", "", string))
-
-
-def init_book(type_: int):
-    '''初始化工作簿'''
-    book = xlwt.Workbook(encoding="UTF-8")
-    sheet: xlwt.Worksheet = book.add_sheet("PUscore")
-    sheet.col(2).width = 2857
-    sheet.write_merge(
-        0, 0, 0, 3, ct.today.strftime("%Y/%m/%d") + "  " + ct.types[type_], ct.STYLE)
-    sheet.write(1, 0, "排名", ct.STYLE)
-    sheet.write(1, 1, "姓名", ct.STYLE)
-    sheet.write(1, 2, "学号", ct.STYLE)
-    sheet.write(1, 3, "分数", ct.STYLE)
-    return book, sheet
-
-
-def write_data(sheet: xlwt.Worksheet, elements: list):
-    '''向sheet中写入elements中的数据'''
-    rank = int(elements[0].string)
-    sheet.write(rank+1, 0, rank, ct.STYLE)
-    sheet.write(rank+1, 1, elements[1].string, ct.STYLE)
-    sheet.write(rank+1, 2, elements[2].string, ct.STYLE)
-    sheet.write(rank+1, 3, float(elements[3].string), ct.STYLE)
+    return int(re.sub(r'\D', "", string))
 
 
 def get_rank_and_pages(type_: int):
@@ -53,3 +35,42 @@ def get_rank_and_pages(type_: int):
         nodes.append(i)
     pagecnt = int(nodes[6].string[2:])
     return rank, pagecnt
+
+
+def get_yn(info: str):
+    '''获取用户输入的Y或N'''
+    opt = input(info).upper()
+    while opt not in ('Y', 'N'):
+        opt = input(ct.ERR_OPT).upper()
+    return opt
+
+
+def whether_continue():
+    '''是否需要继续爬取'''
+    if os.path.exists(book.BOOK_PATH):
+        opt = get_yn(ct.QST_CTN)
+        if opt == 'Y':
+            return True
+        return False
+    return True
+
+
+def divide_int(pages: int):
+    '''将页数按线程数均分'''
+    blocks = pages // ct.THREAD_NUM
+    remaind = pages % ct.THREAD_NUM
+    just = ct.THREAD_NUM - remaind
+    res = [1]
+    for i in range(just):
+        res.append(blocks * (i+1) + 1)
+    for i in range(remaind):
+        res.append(just * blocks + (blocks+1) * (i+1) + 1)
+    return res
+
+def process_bar():
+    '''进度条'''
+    pbar = tqdm.tqdm(total=cter.get_end())
+    while not cter.done():
+        pbar.update(cter.get_diff())
+        time.sleep(0.25)
+    pbar.update(cter.get_diff())
