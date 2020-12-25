@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from book import load_data
 
+
 def data_show():
     '''直方图显示数据'''
-    sns.histplot(load_data(), kde=True)
+    sns.histplot(load_data(), binwidth=5, kde=True)
     plt.show()
