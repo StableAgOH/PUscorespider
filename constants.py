@@ -5,12 +5,13 @@ import datetime
 CONFIG = json.load(open("config.json", "r"))
 headers = CONFIG["headers"]
 school = CONFIG["school"]
+THREAD_NUM = CONFIG["thread_num"]
 if headers["Cookie"] is None or school is None:
     headers["Cookie"] = input("请输入Cookie：")
     school = input("请输入学校：")
     with open("config.json", "w") as f:
         f.write(json.dumps(
-            {"headers": headers, "school": school}, indent=4))
+            {"headers": headers, "school": school, "thread_num": THREAD_NUM}, indent=4))
 
 URL_PRE = "http://"+school+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}&p={page}"
@@ -29,5 +30,3 @@ INFO_DONE = "任务完成啦！ヽ(￣▽￣)ﾉ"
 
 TYPES = (None, "月度排名", "学期排名", "学年排名")
 TODAY = datetime.date.today()
-
-THREAD_NUM = CONFIG["thread_num"]
