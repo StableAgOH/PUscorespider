@@ -1,26 +1,35 @@
 '''常量'''
 import json
 import datetime
+import os
 
-CONFIG = json.load(open("config.json", "r"))
-headers = CONFIG["headers"]
-school = CONFIG["school"]
-THREAD_NUM = CONFIG["thread_num"]
-if headers["Cookie"] is None or school is None:
-    headers["Cookie"] = input("请输入Cookie：")
-    school = input("请输入学校：")
+if os.path.exists("config.json"):
+    CONFIG = json.load(open("config.json", "r"))
+    COOKIE = CONFIG["Cookie"]
+    SCHOOL = CONFIG["school"]
+    THREAD_NUM = CONFIG["thread_num"]
+else:
+    COOKIE = input("请输入Cookie：")
+    SCHOOL = input("请输入学校：")
+    THREAD_NUM = 16
     with open("config.json", "w") as f:
-        f.write(json.dumps(
-            {"headers": headers, "school": school, "thread_num": THREAD_NUM}, indent=4))
+        f.write(json.dumps({"Cookie": COOKIE, "school": SCHOOL,
+                            "thread_num": THREAD_NUM}, sort_keys=True, indent=4))
 
-URL_PRE = "http://"+school+".pocketuni.net"
+HEADERS = {
+    "User-Agent": "Edg/87.0.664.60",
+    "Connection": "keep-alive",
+    "accept": "text/html",
+    "Cookie": COOKIE
+}
+URL_PRE = "http://"+SCHOOL+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}&p={page}"
 URL_USER = URL_PRE+"/index.php?app=home&mod=Account&act=index"
 
 QST_CTN = "数据已存在，是否继续爬取(Y/N)"
 QST_TYP = "要爬取哪个类型的排名(1~3)："
 QST_PAG = "共%d页，要爬取几页数据(0为爬取所有页)："
-QST_DAN = "是否进行数据分析(Y/N)"
+QST_DAN = "\n是否进行数据分析(Y/N)"
 ERR_OPT = "\033[5;31;40m错误：选项错误\n请输入正确的选项：\033[0m"
 ERR_TYP = "\033[5;31;40m错误：类型错误\n请输入正确的类型：\033[0m"
 ERR_PGS = "\033[5;31;40m错误：页数错误\n请输入正确的页数：\033[0m"

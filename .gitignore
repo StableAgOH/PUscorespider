@@ -1,5 +1,5 @@
 __pycache__
 .vscode
-*.html
-*.xls
-get.py
+books
+ignore
+config.json

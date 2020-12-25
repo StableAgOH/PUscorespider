@@ -1,4 +1,6 @@
 '''主模块'''
+import time
+import tqdm
 from utils import *
 from constants import *
 from book import workbook
@@ -28,7 +30,11 @@ if __name__ == "__main__":
         ts = [DataThread(divide[i], divide[i+1])
               for i in range(len(divide)-1)]
         start_all(ts)
-        process_bar()
+        with tqdm.tqdm(total=cter.get_end(),ascii=True) as pbar:
+            while not cter.done():
+                pbar.update(cter.get_diff())
+                time.sleep(0.1)
+            pbar.update(cter.get_diff())
         workbook.save()
     opt = get_yn(QST_DAN)
     if opt == 'Y':

@@ -1,12 +1,9 @@
 '''工具函数'''
 import os
 import re
-import time
 import requests
 import bs4
-import tqdm
 
-from counter import cter
 import book
 import constants as ct
 
@@ -18,7 +15,7 @@ def init_bs(url: str):
 
 def get_rq(url: str):
     '''从url获取一个get的requests'''
-    return requests.get(url, headers=ct.headers)
+    return requests.get(url, headers=ct.HEADERS)
 
 
 def get_num(string: bs4.NavigableString):
@@ -66,11 +63,3 @@ def divide_int(pages: int):
     for i in range(remaind):
         res.append(just * blocks + (blocks+1) * (i+1) + 1)
     return res
-
-def process_bar():
-    '''进度条'''
-    pbar = tqdm.tqdm(total=cter.get_end())
-    while not cter.done():
-        pbar.update(cter.get_diff())
-        time.sleep(0.25)
-    pbar.update(cter.get_diff())
