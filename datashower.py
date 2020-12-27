@@ -1,10 +1,11 @@
 '''数据可视化'''
 import matplotlib.pyplot as plt
 import seaborn as sns
-from book import load_data
+
+import book
 
 
 def data_show():
     '''直方图显示数据'''
-    sns.histplot(load_data(), binwidth=5, kde=True)
+    sns.histplot(book.load_data(), binwidth=5, kde=True)
     plt.show()

@@ -30,10 +30,7 @@ class Counter():
         return self.cnt
 
     def get_diff(self):
-        '''获取计数器上一次的值'''
+        '''获取计数器当前值与上次值的差值'''
         ret = self.cnt-self.last
         self.last = self.cnt
         return ret
-
-
-cter = Counter()

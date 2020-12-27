@@ -2,8 +2,6 @@
 import xlrd
 import xlwt
 
-from counter import cter
-import utils
 import constants as ct
 
 
@@ -19,7 +17,6 @@ class MyBook():
     '''进行操作的工作簿'''
 
     def __init__(self):
-        self.type_ = None
         self.book = xlwt.Workbook(encoding="UTF-8")
         self.sheet: xlwt.Worksheet = self.book.add_sheet("PUscore")
         self.sheet.col(2).width = 2857
@@ -32,29 +29,18 @@ class MyBook():
         '''把工作簿保存到文件'''
         self.book.save(BOOK_PATH)
 
-    def write_data(self, begin, end):
+    def write_data(self, data: list):
         '''向工作簿中写入数据'''
-        for page in range(begin, end):
-            table = utils.init_bs(ct.URL_TP.format(
-                type=self.type_, page=page)).table
-            for i in range(3, len(table.contents), 2):
-                stu = table.contents[i]
-                rank = int(stu.contents[1].string)
-                self.sheet.write(rank+1, 0, rank, STYLE)
-                self.sheet.write(rank+1, 1, stu.contents[3].string, STYLE)
-                self.sheet.write(rank+1, 2, stu.contents[5].string, STYLE)
-                self.sheet.write(
-                    rank+1, 3, float(stu.contents[7].string), STYLE)
-            cter.increment()
+        rank = int(data[0])
+        self.sheet.write(rank+1, 0, rank, STYLE)
+        self.sheet.write(rank+1, 1, data[1], STYLE)
+        self.sheet.write(rank+1, 2, data[2], STYLE)
+        self.sheet.write(rank+1, 3, float(data[3]), STYLE)
 
     def write_title(self, type_):
         '''书写工作簿标题'''
-        self.type_ = type_
         self.sheet.write_merge(
             0, 0, 0, 3, ct.TODAY.strftime("%Y/%m/%d") + "  " + ct.TYPES[type_], STYLE)
-
-
-workbook = MyBook()
 
 
 def load_data():
