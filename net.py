@@ -17,18 +17,18 @@ HEADERS = {
 }
 
 
-def get_rq(url: str):
-    '''从url获取一个get的requests'''
+def get_res(url: str):
+    '''从url获取一个Response'''
     try:
         return requests.get(url, headers=HEADERS, timeout=5)
     except:
         tqdm.tqdm.write("超时重试")
-        return get_rq(url)
+        return get_res(url)
 
 
 def get_bs_instance(url: str):
     '''从url获取一个BeautifulSoup的实例'''
-    return bs4.BeautifulSoup(get_rq(url).content, "lxml")
+    return bs4.BeautifulSoup(get_res(url).content, "lxml")
 
 
 def get_username():

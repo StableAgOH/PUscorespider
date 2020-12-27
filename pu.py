@@ -1,5 +1,4 @@
 '''主模块'''
-import time
 import tqdm
 from utils import *
 from constants import *
@@ -32,7 +31,6 @@ if __name__ == "__main__":
         with tqdm.tqdm(total=cter.get_end(), ascii=True) as pbar:
             while not cter.done():
                 pbar.update(cter.get_diff())
-                time.sleep(0.1)
             pbar.update(cter.get_diff())
         workbook.save()
     if get_yn(QST_DAN) == 'Y':
