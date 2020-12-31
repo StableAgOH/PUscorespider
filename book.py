@@ -1,4 +1,5 @@
 '''工作簿相关'''
+import os
 import xlrd
 import xlwt
 
@@ -27,6 +28,8 @@ class MyBook():
 
     def save(self):
         '''把工作簿保存到文件'''
+        if not os.path.exists("books"):
+            os.makedirs(os.getcwd()+"\\books")
         self.book.save(BOOK_PATH)
 
     def write_data(self, data: list):

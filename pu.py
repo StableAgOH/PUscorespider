@@ -1,6 +1,6 @@
 '''主模块'''
 import tqdm
-from utils import *
+from utils import whether_continue,divide_int,get_yn
 from constants import *
 from thread import DataThread
 from datashower import data_show
