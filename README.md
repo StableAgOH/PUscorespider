@@ -4,6 +4,12 @@ AgOH的首个爬虫作品，多线程快速爬取PU口袋校园的分数排行�
 
 ![](https://s3.ax1x.com/2020/12/27/r4Ipmd.png)
 
+在使用前请先运行以下指令以安装所需的包
+
+```Python
+pip install -r requirements.txt
+```
+
 运行pu.py即可在books目录下获取保存了数据的工作簿一份，首次运行需输入学校缩写及Cookie
 
 * Cookie获得方法：请自行百度
