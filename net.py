@@ -55,8 +55,10 @@ def write_range(url_pre, begin: int, end: int):
     for page in range(begin, end):
         table = get_bs_instance(add_page(url_pre, page)).table
         data_page = [
-            table.contents[stu].contents[attr].string
+            [
+                table.contents[stu].contents[attr].string
+                for attr in range(1, 8, 2)
+            ]
             for stu in range(3, len(table.contents), 2)
-            for attr in range(1, 8, 2)
         ]
         workbook.write_data(data_page)

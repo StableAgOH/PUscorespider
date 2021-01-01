@@ -38,7 +38,7 @@ class MyBook():
         '''以STYLE为格式向sheet中写入数据'''
         self.sheet.write(row, col, label, STYLE)
 
-    def write_data(self, data: List[Tuple[int]]):
+    def write_data(self, data: List[List[int]]):
         '''向工作簿中写入数据'''
         for stu in data:
             rank, sno, name, score = \
