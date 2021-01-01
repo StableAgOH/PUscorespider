@@ -1,5 +1,6 @@
 '''工作簿相关'''
 from typing import List, Tuple
+import os
 import xlwt
 
 import constants as ct
@@ -29,6 +30,8 @@ class MyBook():
 
     def save(self):
         '''把工作簿保存到文件'''
+        if not os.path.exists("books"):
+            os.makedirs(os.getcwd()+"\\books")
         self.book.save(BOOK_PATH)
 
     def write(self, row: int, col: int, label):

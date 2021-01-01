@@ -1,7 +1,7 @@
 '''主模块'''
 import concurrent.futures
 import tqdm
-from utils import *
+from utils import whether_continue,divide_int,get_yn
 from constants import *
 from datashower import data_show
 from net import URL_TP, get_username, get_rank_and_pages, write_range
