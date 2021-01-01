@@ -1,4 +1,5 @@
 '''工作簿相关'''
+from typing import List, Tuple
 import xlwt
 
 import constants as ct
@@ -24,6 +25,7 @@ class MyBook():
         self.sheet.write(1, 2, "学号", STYLE)
         self.sheet.write(1, 3, "分数", STYLE)
         self.scores = []
+        self.done = 0
 
     def save(self):
         '''把工作簿保存到文件'''
@@ -33,15 +35,17 @@ class MyBook():
         '''以STYLE为格式向sheet中写入数据'''
         self.sheet.write(row, col, label, STYLE)
 
-    def write_data(self, data: list):
+    def write_data(self, data: List[Tuple[int]]):
         '''向工作簿中写入数据'''
-        rank, sno, name, score = \
-            int(data[0]), str(data[1]), str(data[2]), float(data[3])
-        self.write(rank+1, 0, rank)
-        self.write(rank+1, 1, sno)
-        self.write(rank+1, 2, name)
-        self.write(rank+1, 3, score)
-        self.scores.append(score)
+        for stu in data:
+            rank, sno, name, score = \
+                int(stu[0]), str(stu[1]), str(stu[2]), float(stu[3])
+            self.write(rank+1, 0, rank)
+            self.write(rank+1, 1, sno)
+            self.write(rank+1, 2, name)
+            self.write(rank+1, 3, score)
+            self.scores.append(score)
+        self.done += 1
 
     def write_title(self, type_):
         '''书写工作簿标题'''

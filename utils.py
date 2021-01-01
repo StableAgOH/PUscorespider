@@ -34,9 +34,12 @@ def divide_int(pages: int):
     blocks = pages // loader.THREAD_NUM
     remaind = pages % loader.THREAD_NUM
     just = loader.THREAD_NUM - remaind
-    res = [1]
+    last = 1
     for i in range(just):
-        res.append(blocks * (i+1) + 1)
+        tmp = blocks * (i+1) + 1
+        yield (last,tmp)
+        last = tmp
     for i in range(remaind):
-        res.append(just * blocks + (blocks+1) * (i+1) + 1)
-    return res
+        tmp = just * blocks + (blocks+1) * (i+1) + 1
+        yield (last,tmp)
+        last = tmp
