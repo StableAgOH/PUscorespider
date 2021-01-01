@@ -1,5 +1,5 @@
 '''工作簿相关'''
-from typing import List, Tuple
+from typing import List
 import os
 import xlwt
 
@@ -21,10 +21,10 @@ class MyBook():
         self.book = xlwt.Workbook(encoding="UTF-8")
         self.sheet: xlwt.Worksheet = self.book.add_sheet("PUscore")
         self.sheet.col(2).width = 2857
-        self.sheet.write(1, 0, "排名", STYLE)
-        self.sheet.write(1, 1, "姓名", STYLE)
-        self.sheet.write(1, 2, "学号", STYLE)
-        self.sheet.write(1, 3, "分数", STYLE)
+        self.write(1, 0, "排名")
+        self.write(1, 1, "姓名")
+        self.write(1, 2, "学号")
+        self.write(1, 3, "分数")
         self.scores = []
         self.done = 0
 
