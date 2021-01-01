@@ -5,7 +5,7 @@ from constants import *
 from thread import DataThread
 from datashower import data_show
 from net import get_username, get_rank_and_pages
-from instances import cter, workbook
+from instances import workbook
 
 if __name__ == "__main__":
     if whether_continue():
@@ -23,15 +23,19 @@ if __name__ == "__main__":
         while pages < 0 or pages > pagecnt:
             pages = int(input(ERR_PGS))
         workbook.write_title(tp)
-        cter.set_end(pages)
         divide = divide_int(pages)
         for i in range(len(divide)-1):
             t = DataThread(tp, divide[i], divide[i+1])
             t.start()
-        with tqdm.tqdm(total=cter.get_end(), ascii=True) as pbar:
-            while not cter.done():
-                pbar.update(cter.get_diff())
-            pbar.update(cter.get_diff())
+        with tqdm.tqdm(total=pages, ascii=True) as pbar:
+            pbar.set_description("进度")
+            LAST = 0
+            DONE = len(workbook.scores) // 10
+            while DONE != pages:
+                pbar.update(DONE-LAST)
+                LAST = DONE
+                DONE = len(workbook.scores) // 10
+            pbar.update(pages-LAST)
         workbook.save()
     if get_yn(QST_DAN) == 'Y':
         data_show()

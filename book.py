@@ -1,5 +1,4 @@
 '''工作簿相关'''
-import xlrd
 import xlwt
 
 import constants as ct
@@ -24,27 +23,27 @@ class MyBook():
         self.sheet.write(1, 1, "姓名", STYLE)
         self.sheet.write(1, 2, "学号", STYLE)
         self.sheet.write(1, 3, "分数", STYLE)
+        self.scores = []
 
     def save(self):
         '''把工作簿保存到文件'''
         self.book.save(BOOK_PATH)
 
+    def write(self, row: int, col: int, label):
+        '''以STYLE为格式向sheet中写入数据'''
+        self.sheet.write(row, col, label, STYLE)
+
     def write_data(self, data: list):
         '''向工作簿中写入数据'''
-        rank = int(data[0])
-        self.sheet.write(rank+1, 0, rank, STYLE)
-        self.sheet.write(rank+1, 1, data[1], STYLE)
-        self.sheet.write(rank+1, 2, data[2], STYLE)
-        self.sheet.write(rank+1, 3, float(data[3]), STYLE)
+        rank, sno, name, score = \
+            int(data[0]), str(data[1]), str(data[2]), float(data[3])
+        self.write(rank+1, 0, rank)
+        self.write(rank+1, 1, sno)
+        self.write(rank+1, 2, name)
+        self.write(rank+1, 3, score)
+        self.scores.append(score)
 
     def write_title(self, type_):
         '''书写工作簿标题'''
         self.sheet.write_merge(
             0, 0, 0, 3, ct.TODAY.strftime("%Y/%m/%d") + "  " + ct.TYPES[type_], STYLE)
-
-
-def load_data():
-    '''从已有的工作簿中读取数据'''
-    book = xlrd.open_workbook(BOOK_PATH)
-    sheet: xlrd.sheet.Sheet = book.sheets()[0]
-    return sheet.col_values(3, 2)

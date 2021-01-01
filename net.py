@@ -1,13 +1,13 @@
 '''网络'''
 import requests
+import requests.adapters
 import bs4
-import tqdm
 
 import loader
 import utils
 
 URL_PRE = "http://"+loader.SCHOOL+".pocketuni.net"
-URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}&p={page}"
+URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}"
 URL_USER = URL_PRE+"/index.php?app=home&mod=Account&act=index"
 
 HEADERS = {
@@ -19,11 +19,9 @@ HEADERS = {
 
 def get_res(url: str):
     '''从url获取一个Response'''
-    try:
-        return requests.get(url, headers=HEADERS, timeout=5)
-    except:
-        tqdm.tqdm.write("超时重试")
-        return get_res(url)
+    ses = requests.session()
+    ses.mount("http://", requests.adapters.HTTPAdapter(max_retries=3))
+    return ses.get(url, headers=HEADERS, timeout=5)
 
 
 def get_bs_instance(url: str):
@@ -38,9 +36,13 @@ def get_username():
 
 def get_rank_and_pages(type_: int):
     '''获取当前排名和总页数'''
-    first_page = get_bs_instance(URL_TP.format(type=type_, page='1'))
+    first_page = get_bs_instance(add_page(URL_TP.format(type=type_), 1))
     rank = utils.get_num(first_page.find(class_="myrank").string)
-    # nodes = [i for i in first_page.find(class_="page plist").children]
     nodes = list(first_page.find(class_="page plist").children)
     pagecnt = int(nodes[6].string[2:])
     return rank, pagecnt
+
+
+def add_page(url: str, page: int):
+    '''给一个排行榜URL增加页码'''
+    return url+"&p="+str(page)

@@ -2,10 +2,10 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import book
+from instances import workbook
 
 
 def data_show():
     '''直方图显示数据'''
-    sns.histplot(book.load_data(), binwidth=5, kde=True)
+    sns.histplot(workbook.scores, binwidth=5, kde=True)
     plt.show()
