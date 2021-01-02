@@ -3,7 +3,7 @@ from typing import List
 import os
 import xlwt
 
-import constants as ct
+from constants import TODAY, BOOK_PATH, TYPES
 
 
 al = xlwt.Alignment()
@@ -11,7 +11,6 @@ al.horz = xlwt.Alignment.HORZ_CENTER
 al.vert = xlwt.Alignment.VERT_CENTER
 STYLE = xlwt.XFStyle()
 STYLE.alignment = al
-BOOK_PATH = "books\\"+ct.TODAY.strftime("%Y%m%d")+".xls"
 
 
 class MyBook():
@@ -53,4 +52,4 @@ class MyBook():
     def write_title(self, type_):
         '''书写工作簿标题'''
         self.sheet.write_merge(
-            0, 0, 0, 3, ct.TODAY.strftime("%Y/%m/%d") + "  " + ct.TYPES[type_], STYLE)
+            0, 0, 0, 3, TODAY.strftime("%Y/%m/%d") + "  " + TYPES[type_], STYLE)

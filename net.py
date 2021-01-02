@@ -3,11 +3,11 @@ import requests
 import requests.adapters
 import bs4
 
-import loader
-import utils
 from instances import workbook
+from loader import SCHOOL,COOKIE
+from utils import get_num
 
-URL_PRE = "http://"+loader.SCHOOL+".pocketuni.net"
+URL_PRE = "http://"+SCHOOL+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}"
 URL_USER = URL_PRE+"/index.php?app=home&mod=Account&act=index"
 
@@ -15,7 +15,7 @@ HEADERS = {
     "Accept": "text/html",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
     "Connection": "close",
-    "Cookie": loader.COOKIE
+    "Cookie": COOKIE
 }
 
 
@@ -39,7 +39,7 @@ def get_username():
 def get_rank_and_pages(type_: int):
     '''获取当前排名和总页数'''
     first_page = get_bs_instance(add_page(URL_TP.format(type=type_), 1))
-    rank = utils.get_num(first_page.find(class_="myrank").string)
+    rank = get_num(first_page.find(class_="myrank").string)
     nodes = list(first_page.find(class_="page plist").children)
     pagecnt = int(nodes[6].string[2:])
     return rank, pagecnt
