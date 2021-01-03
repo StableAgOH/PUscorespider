@@ -6,8 +6,8 @@ from constants import *
 from datashower import data_show
 from inoutput import *
 from instances import workbook
-from net import URL_TP, get_username, get_rank_and_pages, write_range
-from utils import divide_int
+from net import URL_TP, write_range
+from utils import *
 
 if __name__ == "__main__":
     if input_continue():

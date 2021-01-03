@@ -4,8 +4,7 @@ import requests.adapters
 import bs4
 
 from instances import workbook
-from loader import SCHOOL,COOKIE
-from utils import get_num
+from loader import SCHOOL, COOKIE
 
 URL_PRE = "http://"+SCHOOL+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}"
@@ -29,20 +28,6 @@ def get_res(url: str):
 def get_bs_instance(url: str):
     '''从url获取一个BeautifulSoup的实例'''
     return bs4.BeautifulSoup(get_res(url).content, "lxml")
-
-
-def get_username():
-    '''从个人信息页获取用户昵称'''
-    return get_bs_instance(URL_USER).find(attrs={"name": "nickname"})["value"]
-
-
-def get_rank_and_pages(type_: int):
-    '''获取当前排名和总页数'''
-    first_page = get_bs_instance(add_page(URL_TP.format(type=type_), 1))
-    rank = get_num(first_page.find(class_="myrank").string)
-    nodes = list(first_page.find(class_="page plist").children)
-    pagecnt = int(nodes[6].string[2:])
-    return rank, pagecnt
 
 
 def add_page(url: str, page: int):
