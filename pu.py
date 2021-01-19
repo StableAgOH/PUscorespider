@@ -11,7 +11,7 @@ from utils import *
 
 if __name__ == "__main__":
     if input_continue():
-        print(INFO_WELC % get_username())
+        # print(INFO_WELC % get_username())
         for i in range(1, 4):
             print(str(i)+"."+TYPES[i])
         tp = input_type()
