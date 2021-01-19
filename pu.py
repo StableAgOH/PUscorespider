@@ -34,6 +34,8 @@ if __name__ == "__main__":
             pbar.update(pages-LAST)
         pool.shutdown()
         workbook.save()
+    else:
+        workbook.load_data()
     if input_yn(QST_DAN) == 'Y':
         data_show()
     print(INFO_DONE)

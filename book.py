@@ -2,6 +2,7 @@
 from typing import List
 import os
 import xlwt
+import xlrd
 
 from constants import TODAY, BOOK_PATH, TYPES
 
@@ -48,6 +49,12 @@ class MyBook():
             self.write(rank+1, 3, score)
             self.scores.append(score)
         self.done += 1
+
+    def load_data(self):
+        '''从已有的工作簿中读取数据'''
+        book = xlrd.open_workbook(BOOK_PATH)
+        sheet = book.sheet_by_index(0)
+        self.scores = sheet.col_values(3,2)
 
     def write_title(self, type_):
         '''书写工作簿标题'''
