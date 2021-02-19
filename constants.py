@@ -5,6 +5,7 @@ import datetime
 ERR_OPT = "错误：选项错误"
 ERR_TYP = "错误：类型错误"
 ERR_PGS = "错误：页数错误"
+ERR_NRK = "错误：无法获取排名……"
 # 普通信息
 INFO_WELC = "欢迎亲爱的%s ━(*｀∀´*)ノ亻!"
 INFO_RANK = "您当前的排名为：%d"

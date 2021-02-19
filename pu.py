@@ -18,7 +18,10 @@ if __name__ == "__main__":
         url_pre = URL_TP.format(type=tp)
         rank, pagecnt = get_rank_and_pages(tp)
         workbook.write_title(tp)
-        print(INFO_RANK % rank)
+        if rank != -1:
+            print(INFO_RANK % rank)
+        else:
+            output_red(ERR_NRK)
         pool = concurrent.futures.ThreadPoolExecutor()
         pages = input_pages(pagecnt)
         for rg in divide_int(pages):
