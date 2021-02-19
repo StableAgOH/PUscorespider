@@ -20,7 +20,10 @@ def get_username():
 def get_rank_and_pages(type_: int):
     '''获取当前排名和总页数'''
     first_page = get_bs_instance(add_page(URL_TP.format(type=type_), 1))
-    rank = get_num(first_page.find(class_="myrank").string)
+    try:
+        rank = get_num(first_page.find(class_="myrank").string)
+    except AttributeError:
+        rank = -1
     nodes = list(first_page.find(class_="page plist").children)
     pagecnt = int(nodes[6].string[2:])
     return rank, pagecnt
