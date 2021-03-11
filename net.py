@@ -6,7 +6,7 @@ import bs4
 from instances import workbook
 from loader import SCHOOL, COOKIE
 
-URL_PRE = "http://"+SCHOOL+".pocketuni.net"
+URL_PRE = "https://"+SCHOOL+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}"
 URL_USER = URL_PRE+"/index.php?app=home&mod=Account&act=index"
 
