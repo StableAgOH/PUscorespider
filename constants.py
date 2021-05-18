@@ -10,6 +10,8 @@ ERR_NRK = "错误：无法获取排名……"
 INFO_WELC = "欢迎亲爱的%s ━(*｀∀´*)ノ亻!"
 INFO_RANK = "您当前的排名为：%d"
 INFO_DONE = "任务完成啦！ヽ(￣▽￣)ﾉ"
+# 警告信息
+WARN_CTN = "警告：继续爬取会覆盖原有文件"
 # 输入提示语
 QST_CTN = "数据已存在，是否继续爬取(Y/N)"
 QST_TYP = "要爬取哪个类型的排名(1~3)："
@@ -19,4 +21,6 @@ QST_DAN = "是否进行数据分析(Y/N)"
 TYPES = ("", "月度排名", "学期排名", "学年排名")
 
 TODAY = datetime.date.today()
-BOOK_PATH = "books\\"+TODAY.strftime("%Y%m%d")+".xls"
+BOOK_FOLDER = "books"
+BOOK_NAME = TODAY.strftime("%Y%m%d")+".xls"
+BOOK_PATH = BOOK_FOLDER + '\\' + BOOK_NAME

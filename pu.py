@@ -1,17 +1,16 @@
 '''主模块'''
-import concurrent.futures
 import tqdm
 
 from constants import *
 from datashower import data_show
 from inoutput import *
 from instances import workbook
-from net import URL_TP, write_range
+from net import URL_TP
 from utils import *
 
 if __name__ == "__main__":
     if input_continue():
-        # print(INFO_WELC % get_username())
+        output_red(WARN_CTN)
         for i in range(1, 4):
             print(str(i)+"."+TYPES[i])
         tp = input_type()
@@ -22,20 +21,19 @@ if __name__ == "__main__":
             print(INFO_RANK % rank)
         else:
             output_red(ERR_NRK)
-        pool = concurrent.futures.ThreadPoolExecutor()
         pages = input_pages(pagecnt)
-        for rg in divide_int(pages):
-            pool.submit(write_range, url_pre, *rg)
-        with tqdm.tqdm(total=pages, ascii=True) as pbar:
-            pbar.set_description("进度")
-            LAST = 0
-            DONE = workbook.done
-            while DONE != pages:
-                pbar.update(DONE-LAST)
-                LAST = DONE
-                DONE = workbook.done
-            pbar.update(pages-LAST)
-        pool.shutdown()
+        tr = tqdm.trange(1, pages+1, ascii=True)
+        tr.set_description("进度")
+        for page in tr:
+            table = get_bs_instance(add_page(url_pre, page)).table
+            data_page = [
+                [
+                    table.contents[stu].contents[attr].string
+                    for attr in range(1, 8, 2)
+                ]
+                for stu in range(3, len(table.contents), 2)
+            ]
+            workbook.write_data(data_page)
         workbook.save()
     else:
         workbook.load_data()
