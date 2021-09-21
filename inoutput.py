@@ -9,6 +9,7 @@ def input_continue():
     '''是否需要继续爬取'''
     if os.path.exists(BOOK_PATH):
         if input_yn(QST_CTN) == 'Y':
+            output_red(WARN_CTN)
             return True
         return False
     return True

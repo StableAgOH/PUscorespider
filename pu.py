@@ -10,7 +10,6 @@ from utils import *
 
 if __name__ == "__main__":
     if input_continue():
-        output_red(WARN_CTN)
         for i in range(1, 4):
             print(str(i)+"."+TYPES[i])
         tp = input_type()

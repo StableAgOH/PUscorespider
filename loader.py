@@ -6,11 +6,12 @@ if os.path.exists("config.json"):
     CONFIG = json.load(open("config.json", "r"))
     COOKIE = CONFIG["Cookie"]
     SCHOOL = CONFIG["school"]
-    THREAD_NUM = CONFIG["thread_num"]
+    RETRIES = CONFIG["max_retries"]
+    TIMEOUT = CONFIG["timeout"]
 else:
     COOKIE = input("请输入Cookie：")
     SCHOOL = input("请输入学校：")
-    THREAD_NUM = 16
-    with open("config.json", "w") as f:
-        f.write(json.dumps({"Cookie": COOKIE, "school": SCHOOL,
-                            "thread_num": THREAD_NUM}, sort_keys=True, indent=4))
+    RETRIES = 5
+    TIMEOUT = 60
+    json.dump({"Cookie": COOKIE, "school": SCHOOL,
+               "max_retries": RETRIES, "timeout": TIMEOUT}, open("config.json", "w"), sort_keys=True, indent=4)

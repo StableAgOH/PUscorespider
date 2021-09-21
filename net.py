@@ -3,7 +3,7 @@ import requests
 import requests.adapters
 import bs4
 
-from loader import SCHOOL, COOKIE
+from loader import SCHOOL, COOKIE, RETRIES, TIMEOUT
 
 URL_PRE = "https://"+SCHOOL+".pocketuni.net"
 URL_TP = URL_PRE+"/index.php?app=event&mod=School&act=rank&k={type}"
@@ -20,8 +20,9 @@ HEADERS = {
 def get_res(url: str):
     '''从url获取一个Response'''
     ses = requests.session()
-    ses.mount("http://", requests.adapters.HTTPAdapter(max_retries=3))
-    return ses.get(url, headers=HEADERS, timeout=5)
+    ses.mount("http://", requests.adapters.HTTPAdapter(max_retries=RETRIES))
+    ses.mount("https://", requests.adapters.HTTPAdapter(max_retries=RETRIES))
+    return ses.get(url, headers=HEADERS, timeout=TIMEOUT)
 
 
 def get_bs_instance(url: str):

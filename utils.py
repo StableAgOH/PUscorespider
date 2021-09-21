@@ -2,7 +2,6 @@
 import re
 
 from constants import *
-from loader import THREAD_NUM
 from net import *
 
 
@@ -27,19 +26,3 @@ def get_rank_and_pages(type_: int):
     nodes = list(first_page.find(class_="page plist").children)
     pagecnt = int(nodes[6].string[2:])
     return rank, pagecnt
-
-
-def divide_int(pages: int):
-    '''将页数按线程数均分'''
-    blocks = pages // THREAD_NUM
-    remaind = pages % THREAD_NUM
-    just = THREAD_NUM - remaind
-    last = 1
-    for i in range(just):
-        tmp = blocks * (i+1) + 1
-        yield (last, tmp)
-        last = tmp
-    for i in range(remaind):
-        tmp = just * blocks + (blocks+1) * (i+1) + 1
-        yield (last, tmp)
-        last = tmp
