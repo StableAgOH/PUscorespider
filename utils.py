@@ -12,7 +12,8 @@ from net import *
 
 
 def get_num(string):
-    return int(re.sub(r'\D', "", string))
+    numstr = re.sub(r'\D', "", string)
+    return int(numstr) if numstr.isdigit() else -1
 
 
 def get_rank_and_pages(type_: int):
