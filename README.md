@@ -8,7 +8,7 @@
 
 在使用前请先运行以下指令以安装所需的包。
 
-```Python
+```bash
 pip install -r requirements.txt
 ```
 

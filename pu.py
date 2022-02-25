@@ -1,11 +1,5 @@
-'''主模块'''
 import tqdm
 
-from constants import *
-from datashower import data_show
-from inoutput import *
-from instances import workbook
-from net import URL_TP
 from utils import *
 
 if __name__ == "__main__":
@@ -22,7 +16,7 @@ if __name__ == "__main__":
             output_red(ERR_NRK)
         pages = input_pages(pagecnt)
         tr = tqdm.trange(1, pages+1, ascii=True)
-        tr.set_description("进度")
+        tr.set_description("Progress")
         for page in tr:
             table = get_bs_instance(add_page(url_pre, page)).table
             data_page = [
@@ -37,5 +31,5 @@ if __name__ == "__main__":
     else:
         workbook.load_data()
     if input_yn(QST_DAN) == 'Y':
-        data_show()
+        show()
     print(INFO_DONE)

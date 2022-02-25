@@ -1,4 +1,3 @@
-'''读取配置设置'''
 import json
 import os
 
