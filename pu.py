@@ -8,7 +8,6 @@ import seaborn as sns
 import tqdm
 from bs4 import BeautifulSoup
 from matplotlib import pyplot as plt
-from requests.adapters import HTTPAdapter
 
 from book import MyBook
 
@@ -20,41 +19,52 @@ if path_config.exists():
     CONFIG = json.load(open(path_config, "r"))
 else:
     CONFIG = {
-        "cookie": input("请输入Cookie："),
+        "mobile": input("请输入手机号："),
+        "password": input("请输入密码："),
         "school": input("请输入学校：")
     }
     json.dump(CONFIG, open(path_config, "w"), sort_keys=True, indent=4)
 
-ENDPOINT = f"https://{CONFIG['school']}.pocketuni.net/index.php?app=event&mod=School&act=rank"
-
+URL_LOGIN = "https://pocketuni.net/index.php?app=home&mod=Public&act=doMobileLogin"
+URL_RANK = f"https://{CONFIG['school']}.pocketuni.net/index.php?app=event&mod=School&act=rank"
 HEADERS = {
-    "Accept": "text/html",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/87.0.4280.88 Safari/537.36",
-    "Connection": "close",
-    "Cookie": CONFIG['cookie']
+                  "Chrome/87.0.4280.88 Safari/537.36"
 }
+SESSION = requests.session()
 
 TYPES = ("月度排名", "学期排名", "学年排名")
 
 
 def get_bs(url: str):
-    ses = requests.session()
-    ses.mount("https://", requests.adapters.HTTPAdapter(max_retries=3))
-    return BeautifulSoup(ses.get(url, headers=HEADERS, timeout=30).content, "lxml")
+    return BeautifulSoup(SESSION.get(url, headers=HEADERS, timeout=30).content, "lxml")
 
 
-def input_yn(info: str):
+def input_yes(info: str):
     opt = input(info).upper()
     while opt not in ('Y', 'N'):
         logger.error("选项错误")
         opt = input(info).upper()
-    return opt
+    return opt == 'Y'
 
 
 if __name__ == "__main__":
+    logger.info("尝试登录")
+    res = SESSION.post(URL_LOGIN, {
+        "mobile": CONFIG["mobile"],
+        "password": CONFIG["password"]
+    }, headers={
+        **HEADERS,
+        "X-Requested-With": "XMLHttpRequest"
+    })
+    if res.ok:
+        logger.info("登录成功")
+    else:
+        logger.error("登陆失败")
+        exit(0)
+
     workbook = MyBook()
-    if not workbook.exists() or input_yn("数据已存在，是否继续获取(Y/N)"):
+    if not workbook.exists() or input_yes("数据已存在，是否继续获取(Y/N)"):
         for i in range(1, 4):
             print(f"{i}. {TYPES[i - 1]}")
 
@@ -65,7 +75,7 @@ if __name__ == "__main__":
         tp = int(tp) - 1
 
         workbook.write_title(TYPES[tp])
-        first_page = get_bs(f"{ENDPOINT}&k={tp}&p=1")
+        first_page = get_bs(f"{URL_RANK}&k={tp}&p=1")
         try:
             rank = int(re.match(r"\d+", first_page.find(class_="myrank").string).group())
             logger.info(f"当前排名为：{rank}")
@@ -80,7 +90,7 @@ if __name__ == "__main__":
         pages = pagecnt if pages == '0' else int(pages)
 
         for page in tqdm.trange(1, pages + 1, ascii=True):
-            table = get_bs(f"{ENDPOINT}&k={tp}&p={page}").table
+            table = get_bs(f"{URL_RANK}&k={tp}&p={page}").table
             data_page = [
                 [
                     table.contents[stu].contents[attr].string
@@ -93,7 +103,7 @@ if __name__ == "__main__":
     else:
         workbook.load_data()
 
-    if input_yn("是否进行数据分析(Y/N)") == 'Y':
+    if input_yes("是否进行数据分析(Y/N)"):
         sns.histplot(workbook.scores, binwidth=4, kde=True)
         plt.title(f"{CONFIG['school']} PU Score")
         plt.xlabel("Score")
