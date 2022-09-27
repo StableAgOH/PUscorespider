@@ -57,10 +57,12 @@ if __name__ == "__main__":
         **HEADERS,
         "X-Requested-With": "XMLHttpRequest"
     })
-    if res.ok:
+    rj = res.json()
+    if rj["status"] == 1:
         logger.info("登录成功")
     else:
         logger.error("登陆失败")
+        logger.error(rj["info"])
         exit(0)
 
     workbook = MyBook()
@@ -77,12 +79,14 @@ if __name__ == "__main__":
         workbook.write_title(TYPES[tp])
         first_page = get_bs(f"{URL_RANK}&k={tp}&p=1")
         try:
-            rank = int(re.match(r"\d+", first_page.find(class_="myrank").string).group())
+            rank = int(
+                re.match(r"\d+", first_page.find(class_="myrank").string).group())
             logger.info(f"当前排名为：{rank}")
         except AttributeError:
             logger.warning("无法获取当前排名")
 
-        pagecnt = int(list(first_page.find(class_="page plist").children)[6].string[2:])
+        pagecnt = int(list(first_page.find(
+            class_="page plist").children)[6].string[2:])
         pages = input(f"共有{pagecnt}页数据，要爬取几页数据(每页10个同学，0为爬取所有页)：")
         while not pages.isdigit() or not 0 <= int(pages) <= pagecnt:
             logger.error("页数错误")
